@@ -1,0 +1,50 @@
+Portfolio Game
+Dennis Shasha
+Omniheurist Course
+Computer Science
+ 
+Description
+
+You are given a bunch of "investment vehicles" which we will unceremoniously call gambling instruments, or gambles for short. Before discussing an exact formulation of the problem, let's suppose just for the moment that you have a bunch of possible gambles and each of them pays two to one with 0.7 odds. Should you put all your money in one or spread it out assuming your goal is to maximize expected return and minimize the variance. Obviously spread them out. Expected value doesn't change but variance goes way down. A minimum variance solution that gives a certain expected value is called an efficient frontier .
+
+Now suppose that you have correlations among your gambles. That is, suppose you have class A gambles that have a correlation of 1 with one another, class B gambles that have a correlation of 1 with one another and so on for other classes. You would want to place your gambles in the different classes. Dividing money among two gambles in the same class gives the same variance as putting all the money on one gamble of that class.
+
+We are now ready to state the problem. Each gamble gi has a high return (gihi), a medium return (gimed), and a low return (gilow). If you place d dollars on gi and you get the high return, then you receive d*gihi dollars from that gamble. Each return has an associated initial probability: gihiprob, gimedprob, gilowprob, where gimedprob is at least 0.4. Initially, the average expected return per gamble is 2 to 1, but that is just an average. Different gambles may give different returns. Low returns are normally less than 1 (so constitute a loss).
+
+After an initial assignment of probabilities, they are modified based on a class number ranging from 0 to 15. Certain those classes (called favorable classes) bias gihiprob higher at the expense of gilowprob and certain ones (called unfavorable classes) make gilowprob higher at the expense of gihiprob. Other classes are neutral (don't change any probabilities). The numbers in each category need not be equal. Here is how the bias for favorable/unfavorable works: if a gamble's class is favorable then halve gilowprob and add that probability to gihiprob. If a gamble's class is unfavorable then halve gihiprob and add that probability to gilowprob.
+
+Moreover, certain gambles are linked. In each round, gambles are played in an order g1, g2, ... gn, where the order is a random permutation of the gamble ids (different for each run). If it is time to play gi then count all gj where gj occurs before gi in the round. that are linked to i and that got a high return. Call that number Hi. Then medium Mi. Then Li. If Hi > Mi + Li, then halve gilowprob (from the value that it might have already been assigned based on its class) the value that and add that probability to gihiprob. If Li > Hi + Mi, then halve gihiprob and add that probability to gilowprob. Then play gamble gi.
+
+You will be given an initial capital of 1 (which you can divide however you wish), a bunch of possible gambles with various returns and probabilities and some links among the gambles. Your task is to allocate your 1 unit among several gambles.
+
+(First game) The architect will then do the following in five rounds: Assign outcomes to each gamble according to the probability above. Calculate each person's wealth based on their allocation and the outcomes. If a person has 2 units or more (having started each round at 1), then that person gets a point for that round. Also the player will be told what the final return outcome of each gamble was to help the player infer which class is favorable and perhaps change allocations for the next round. The player is not told which order the gambles were played in however. The favorable and unfavorable classes will remain the same during the five rounds.
+
+(Second game) We will play a long term investment game of say 200 rounds. The favorable and unfavorable classes may change up to 10 times (without warning) during those rounds. Again, the player will be told what the final return outcome of each gamble was to help the player infer which class(es) is(are) favorable and perhaps change allocations for the next round. Players need not be fully invested during all rounds. Inspired by Jake Loveless's experience at a finance company, the winner gets the best modified Sharpe ratio: (sum of returns/sqrt variance of returns). Each return is the round's gain or loss.
+The Learning Problem
+
+Note that you will greatly increase your odds of winning if you can bet more on favorable classes and less on unfavorable classes. So you must determine which are which. For this you will need a learning algorithm. A simple learning algorithm would be bet more on classes associated with the most wins (high payoff). So for each combination of classes, you write down which fraction of results gave a high return. Then you put more money into the classes that gave you high returns and less into the one that gave low returns. Heuristically, this works if the probabilities gihiprob, gimedprob, and gilowprob were initially the same for all gambles, there was bias, and there were no links. But our world is more complicated than that.
+
+Call a gamble "clean" if it has no links. So you might try bet more on clean classes associated with the most wins. But then there might be too few of these. How would you weight the different links?
+
+Other indications of goodness might have to do with what the initial probability is of getting the high payoff. If it's relatively high to begin with then it is less surprising that we get to a high payoff. You want to find the combinations that are favorable. (There will be a prize for this alone.)
+
+Here is a hint. Suppose that you knew that some pair of combinations were favorable (but you don't know which). Then you could evaluate the expected value of high payoffs for all the gambles ignoring links. You could then look at the combination pair that maximizes the closeness of the actual outcome to the predicted one. That is,
+argmin_combinationpair (average absolute diff(actual outcomes, predicted outcomes given that some pair of combinations is favorable)).
+
+You don't have a lot of data so you don't want to bet too much right away. It may help you to know something about statistics (see our Statistics is Easy book which you can get from the Morgan Claypool website if you are on the NYU campus.) This will give you a way to compute your confidence in your guess about combination pairs.
+Architecture Team
+
+Generate the data (roughly 200 gambles). There are three tables that are all visible.
+
+gamble(gambleid, high return, high prob, medium return, med prob, low return, low prob)
+(The average expected initial return of any gamble will be 2 to 1, but this can change based on the class and links.)
+
+gambleatts(gambleid, class)
+(Hidden from gamblers is a set of one or more classes that are favorable, one or more that are unfavorable and the rest that are neutral.)
+
+link(gambleid, gambleid)
+(This table's semantics are expressed above.)
+
+Run the rounds. Keep score. Announce the winner(s). A graphical display showing weights in different portfolios would be nice.
+
+Note the variants: favorable classes change over time, more classes, more links (increase the link probability). 
