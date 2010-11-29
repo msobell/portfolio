@@ -1,0 +1,39 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+<META NAME="keywords" CONTENT="NYU, New York University, ACM, Computer Science, NYU ACM">
+<title>Portfolio Architecture</title>
+</head>
+<body bgcolor="#ffffff" vlink="#663300" text="#000000">
+<h1>Portfolio Architecture</h1><br>
+latest version (v4-3) available <a href="portfolio_v4-3.tar">here</a><br>
+the original files are <a href="portfolio_v4-2.tar">here</a>
+<br><BR>
+<h2>Protocol</h2>
+<p>Connect to the server and send your name. You will get back OK.
+<p>Send your first set of allocations to the server as one line of space/comma separated decimal numbers. Unless your allocations are exactly expressible in a finite number of decimal places, you will have to send approximations (with our game of 200 gambles, 5 or 6 decimal places should be enough). After getting your  allocations, the Simulator normalizes them so that they sum to 1. If all goes smoothly, you will get back OK.
+<p>After assigning outcomes and calculating your income, you will be sent feedback in the form of one line containing the amount you made last round and space-separated outcomes drawn from {HI,MD,LO} (eg. "02.345 MD HI LO HI MD MD..."). The outcomes are in the order of gambleid and give no explicit indication of what order the gambles were played in or how the probabilities were adjusted based on the hidden attributes & links.
+<p>After receiving the outcomes, send your next set of allocations.
+<p>If the Simulator can't handle something you send it, it should send back an error message saying ERR: &lt;some reason>.
+<p>There is a sample client included with a random strategy (RandomPlayer.java) that may help.
+<br>
+&nbsp;&nbsp;$ java RandomPlayer &lt;host> &lt;port> &lt;name> &lt;nGambles> &lt;nRuns>
+<br>
+<br>
+<h2>Running The Server</h2>
+<p>there are 2 programs you need to run.  
+<p>1. DataGen takes 2 parameters and pseudorandomly generates a data file which contains the values used by the server.  The data contained in this file can (and is strongly advised to) be used by the players.
+<p>usage: java DataGen &lt;number of gambles> &lt;output file name>
+<p>2. Simulator runs the entire game simulation.
+<p>usage: java Simulator &lt;data file> &lt;port> &lt;viz> [nRuns]
+<p>where viz is either true or false depending on if you want the GUI to pop up and [nRuns] is an optional parameter specifying the number of games that should be played by a non-GUI simulation.  nRuns is ignored if viz is true.
+<p>you can run a sample game with 2 random clients (or more by starting more than 2) and the GUI by executing the following commands:
+<BR>
+<p>java -cp . DataGen 200 data.txt &<br>
+java -cp . Simulator data.txt 10000 true &<br>
+java -cp . RandomPlayer localhost 10000 rnd1 200 5 &<br>
+java -cp . RandomPlayer localhost 10000 rnd2 200 5 &<br>
+<BR>
+and then by pressing play each time you want to simulate a single round.
+</body>
+</html>
