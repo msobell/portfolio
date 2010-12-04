@@ -1,4 +1,5 @@
 #! /bin/bash
+# TODO - make amounts carry over from game to game (game 2 on the website)
 echo "Generating data.txt..."
 java -cp . DataGen 200 data.txt
 sleep 1
