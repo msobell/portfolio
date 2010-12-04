@@ -312,6 +312,7 @@ public class Simulator implements Server.ClientHandler {
                 for ( int j = 0; j < g.links.length; j++ ) {
                     Gamble gg = g.links[j];
                     if ( gg.id == g.id )
+
                         continue;
                     int lvl = ( gg.outcomes.length == turn )
                             ? -1 : gg.outcomes[turn].lvl;
