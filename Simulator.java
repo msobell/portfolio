@@ -54,7 +54,7 @@ public class Simulator implements Server.ClientHandler {
 
 
 
-    Simulator( String dataFile, int port, boolean viz, int nRuns ) {
+    Simulator( String dataFile, int port, boolean carryOver, boolean viz, int nRuns ) {
         readData( dataFile );
         assignHiddenAttrs();
         server = new Server( port, this );
@@ -887,12 +887,14 @@ public class Simulator implements Server.ClientHandler {
         String dataFile = null;
         int port = -1;
         boolean viz = false;
+	boolean carryOver = false;
         int nRuns = -1;
         try {
             dataFile = args[0];
             port = Integer.parseInt( args[1] );
-            viz = ( new Boolean( args[2] ) ).booleanValue();
-            nRuns = ( viz ) ? -1 : Integer.parseInt( args[3] );
+	    carryOver = ( new Boolean( args[2] ) ).booleanValue();
+            viz = ( new Boolean( args[3] ) ).booleanValue();
+            nRuns = ( viz ) ? -1 : Integer.parseInt( args[4] );
 //            if ( viz ) {
 //                System.out.println( "viz version not ready yet!!\n" );
 //                System.exit(1);
@@ -904,10 +906,11 @@ public class Simulator implements Server.ClientHandler {
                     "    java Simulator <dataFile> <port> <viz> [nRuns]\n" +
                     "      dataFile  gambles,links,attrs\n" +
                     "      port      for server\n" +
+		    "      carryOver {true|false} - for long or short game\n" +
                     "      viz       {true|false} - show gui\n" +
                     "      nRuns     if viz=false, # games to keep server alive\n" );
             System.exit(1);
         }
-        new Simulator( dataFile, port, viz, nRuns );
+        new Simulator( dataFile, port, carryOver, viz, nRuns );
     }
 }
