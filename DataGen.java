@@ -59,7 +59,7 @@ public class DataGen {
 		//  depending on probabilities, rets[HI] calculated
 		//  above could be really big, or below rets[MD]
 		//  if either of these, redo
-		if ( rets[HI] <= rets[MD] || rets[HI] >= MAX_RET ) {
+		if ( rets[HI] <= rets[MD] || rets[HI] >= MAX_RET || probs[MD] < 0.4) {
 		    i--;
 		    continue;
 		}
