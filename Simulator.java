@@ -36,6 +36,7 @@ public class Simulator implements Server.ClientHandler {
     static final long CHECK_PLAY_SLEEP = 1000;
     static final long ANIMATE_SLEEP = 100;
 
+    static final int MAX_CHANGE = 10;
 
     int nGambles;
     int roundCount = 0;
@@ -51,14 +52,14 @@ public class Simulator implements Server.ClientHandler {
     Viz viz;
     double maxTotalIncome = 0;
     double maxCumWealth = 1;
-
-
+    int changeCount = 0;
 
     Simulator( String dataFile, int port, boolean carryOver, boolean viz, int nRuns ) {
         readData( dataFile );
         assignHiddenAttrs();
         server = new Server( port, this );
         server.start();
+	    
         if ( viz ) {
             out( "viz mode\n" );
             this.viz = new Viz();
@@ -68,6 +69,13 @@ public class Simulator implements Server.ClientHandler {
             out( "non-viz mode\n" );
             for ( int i = 0; i < nRuns; i++ ) {
                 //  play a round if player has a new alloc
+		double chance = RND.nextDouble();
+		double do_it = 1/((double)nRuns/MAX_CHANGE);
+		if ( ( chance < do_it ) && ( changeCount < MAX_CHANGE ) && (i > 0 ) ) {
+		    System.out.println("Changing attributes for the " + (changeCount+1) + " time!");
+		    assignHiddenAttrs();
+		    changeCount++;
+		}
                 while ( !tryPlay() ) {
                     try {
                         Thread.sleep( CHECK_PLAY_SLEEP );
@@ -221,13 +229,15 @@ public class Simulator implements Server.ClientHandler {
             }
             //out( "sending feedback to " + p.name + "\n" );
             Turn t = p.lastTurn;
-            p.cumWealth *= t.totalIncome;
+	    // this is a ghetto way to do this -- 12/6/10 Max
+	    // System.out.println("Max = " + Double.MAX_VALUE);
+	    p.cumWealth *= t.totalIncome;
             if ( t.totalIncome >= 2 )
                 p.nWins++;
             String totalIncome = DF_RET.format( t.totalIncome );
             Server.Client c = ( Server.Client ) players2clients.get(p);
             c.write( totalIncome + " " + feedback );
-	    System.out.println("cumWealth for " + p.name + ": " + Math.round(p.cumWealth) );
+	    System.out.println("cumWealth for " + p.name + ": " + p.cumWealth);
             p.haveNewAlloc = false;
         }
     }
@@ -291,14 +301,18 @@ public class Simulator implements Server.ClientHandler {
             //  modify probs by hidden attrs
             int attrSway = MD;
             if ( g.attr == attrFav1 || g.attr == attrFav2 ) {
+		// System.out.println("Modifying " + g.toString() );
                 trace( "attr favorable\n" );
                 attrSway = HI;
                 probs[HI] += ( probs[LO] /= 2 );
                 normalize(probs);
             } else if ( g.attr == attrUnfav1 || g.attr == attrUnfav2 ) {
+		// System.out.println("Modifying " + g.toString() );
+		// System.out.println("Old LO = " + probs[LO]);
                 trace( "attr unfavorable\n" );
                 attrSway = LO;
                 probs[LO] += ( probs[HI] /= 2 );
+		// System.out.println("New LO = " + probs[LO]);
                 normalize(probs);
             } else {
                 trace( "attr neutral\n" );
@@ -572,7 +586,7 @@ public class Simulator implements Server.ClientHandler {
         double[] newAllocs;
         int nGames = 0;
         int nWins = 0;
-        double cumWealth = 1;
+        double cumWealth = 1.0;
         Turn lastTurn = null;
 
     }
