@@ -227,6 +227,7 @@ public class Simulator implements Server.ClientHandler {
             String totalIncome = DF_RET.format( t.totalIncome );
             Server.Client c = ( Server.Client ) players2clients.get(p);
             c.write( totalIncome + " " + feedback );
+	    System.out.println("cumWealth for " + p.name + ": " + Math.round(p.cumWealth) );
             p.haveNewAlloc = false;
         }
     }
@@ -374,8 +375,8 @@ public class Simulator implements Server.ClientHandler {
         attrFav2    = ( ( Integer ) al.get(1) ).intValue();
         attrUnfav1  = ( ( Integer ) al.get(2) ).intValue();
         attrUnfav2  = ( ( Integer ) al.get(3) ).intValue();
-        //out( "attrs: fav: " + attrFav1 + "," + attrFav2 +
-        //     " unfav: " + attrUnfav1 + "," + attrUnfav2 + "\n" );
+        out( "attrs: fav: " + attrFav1 + "," + attrFav2 +
+             " unfav: " + attrUnfav1 + "," + attrUnfav2 + "\n" );
     }
 
 
@@ -903,7 +904,7 @@ public class Simulator implements Server.ClientHandler {
             e.printStackTrace();
             System.out.println(
                     "  usage:\n" +
-                    "    java Simulator <dataFile> <port> <viz> [nRuns]\n" +
+                    "    java Simulator <dataFile> <port> <carryOver> <viz> [nRuns]\n" +
                     "      dataFile  gambles,links,attrs\n" +
                     "      port      for server\n" +
 		    "      carryOver {true|false} - for long or short game\n" +
