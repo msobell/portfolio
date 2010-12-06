@@ -102,27 +102,27 @@ public class DataGen {
 	    //  permute the list so the attrs occur in a rnd order
 	    Collections.shuffle(g2a);
 	    //  write the attr-sets to file
-	    bw.write( "#gambleatts(gambleid, A1, A2, A3, A4)" );
+	    bw.write( "#gambleatts(gambleid, gambleclass)" );
 	    bw.newLine();
 	    for ( int i = 0; i < ng; i++ ) {
 		String s = null;
 		switch ( ( ( Integer ) g2a.get(i) ).intValue() ) {
-                case  0:  s = "0, 0, 0, 0";  break;
-                case  1:  s = "0, 0, 0, 1";  break;
-                case  2:  s = "0, 0, 1, 0";  break;
-                case  3:  s = "0, 0, 1, 1";  break;
-                case  4:  s = "0, 1, 0, 0";  break;
-                case  5:  s = "0, 1, 0, 1";  break;
-                case  6:  s = "0, 1, 1, 0";  break;
-                case  7:  s = "0, 1, 1, 1";  break;
-                case  8:  s = "1, 0, 0, 0";  break;
-                case  9:  s = "1, 0, 0, 1";  break;
-                case 10:  s = "1, 0, 1, 0";  break;
-                case 11:  s = "1, 0, 1, 1";  break;
-                case 12:  s = "1, 1, 0, 0";  break;
-                case 13:  s = "1, 1, 0, 1";  break;
-                case 14:  s = "1, 1, 1, 0";  break;
-                case 15:  s = "1, 1, 1, 1";  break;
+                case  0:  s = "0";  break;
+                case  1:  s = "1";  break;
+                case  2:  s = "2";  break;
+                case  3:  s = "3";  break;
+                case  4:  s = "4";  break;
+                case  5:  s = "5";  break;
+                case  6:  s = "6";  break;
+                case  7:  s = "7";  break;
+                case  8:  s = "8";  break;
+                case  9:  s = "9";  break;
+                case 10:  s = "10";  break;
+                case 11:  s = "11";  break;
+                case 12:  s = "12";  break;
+                case 13:  s = "13";  break;
+                case 14:  s = "14";  break;
+                case 15:  s = "15";  break;
 		}
 		bw.write( DF_INT.format(i) + ", " + s );
 		bw.newLine();

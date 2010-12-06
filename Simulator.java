@@ -427,7 +427,7 @@ public class Simulator implements Server.ClientHandler {
                 if ( ddg[0] != i || dda[0] != i )
                     throw new RuntimeException(
                             "gambles or attrs not in order" );
-                if ( ddg.length != 7 || dda.length != 5 )
+                if ( ddg.length != 7 || dda.length != 2 )
                     throw new RuntimeException(
                             "wrong # of tokens in gamble or attr " + i );
                 //  rets & probs
@@ -436,15 +436,17 @@ public class Simulator implements Server.ClientHandler {
                 //  normalize probs from file
                 normalize( probs );
                 //  map attr string to int
-                int attr = 0;
-                for ( int j = 1; j < 5; j++ )
-                    if ( dda[j] == 0 )
-                        ;
-                    else if ( dda[j] == 1 )
-                        attr += 1 << (4-j);
-                    else
-                        throw new RuntimeException(
-                                "non-binary attr for " + i );
+                int attr = (int)dda[1];
+		// System.out.println("Attr: " + attr);
+		// old code for A1, A2, A3, A4 -- 12/5/10 Max
+		// for ( int j = 1; j < 5; j++ )
+                //     if ( dda[j] == 0 )
+                //         ;
+                //     else if ( dda[j] == 1 )
+                //         attr += 1 << (4-j);
+                //     else
+                //         throw new RuntimeException(
+                //                 "non-binary attr for " + i );
                 //  create gamble
                 gambles[i] = new Gamble( i, probs, rets, attr );
             }
