@@ -686,7 +686,12 @@ public class Simulator implements Server.ClientHandler {
                     ( new Thread() {
                         public void run() {
 			    out( "gui triggered human\n" );
-			    // newHuman( port );
+			    String host = "localhost";
+			    // port from above
+			    // nGambles from above
+			    // datafile from above
+			    
+			    // newHuman( host, port, nGambles, dataFile );
 			    bHum.setEnabled( true );
 			    repaint();
 			}
