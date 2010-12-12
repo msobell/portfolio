@@ -59,7 +59,7 @@ public class Simulator implements Server.ClientHandler {
         assignHiddenAttrs();
         server = new Server( port, this );
         server.start();
-	    
+
         if ( viz ) {
             out( "viz mode\n" );
             this.viz = new Viz();
@@ -599,7 +599,7 @@ public class Simulator implements Server.ClientHandler {
 
         FontMetrics fm = getFontMetrics( f2 );
 
-        JButton bPlay;
+        JButton bPlay, bHum;
         JPanel pOutcomes, pPlayers;
 
         int idxOrder = -1;
@@ -659,6 +659,8 @@ public class Simulator implements Server.ClientHandler {
             lAttrs.setFont( f1 );
             bPlay = new JButton( "Play" );
             bPlay.setFont( f1 );
+            bHum = new JButton( "Add Human!" );
+	    bHum.setFont( f1 );
             bPlay.addActionListener( new ActionListener() {
                 public void actionPerformed( ActionEvent e ) {
                     bPlay.setEnabled( false );
@@ -676,11 +678,30 @@ public class Simulator implements Server.ClientHandler {
                     } ).start();
                 }
             } );
+
+            // added by Max -- 12/12/10
+	    bHum.addActionListener( new ActionListener() {
+                public void actionPerformed( ActionEvent e ) {
+                    bHum.setEnabled( false );
+                    ( new Thread() {
+                        public void run() {
+			    out( "gui triggered human\n" );
+			    // newHuman( port );
+			    bHum.setEnabled( true );
+			    repaint();
+			}
+                    } ).start();
+                }
+            } );
+
+
             JPanel pTop = new JPanel();
             pTop.add( lAttrs );
             pTop.add( bPlay );
+	    pTop.add( bHum );
             pOutcomes = new OutcomesPanel();
             Box boxNorth = Box.createVerticalBox();
+
             boxNorth.add( pTop );
             boxNorth.add( pOutcomes );
             boxNorth.add( Box.createVerticalStrut(5) );
