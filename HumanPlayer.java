@@ -2,7 +2,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -10,13 +9,10 @@ import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.text.DecimalFormat;
-import java.util.Random;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -24,83 +20,89 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 /**
- * Spawned from the Simulator after "Play Human" option is clicked
- * Gets host, port, nGambes (and the datafile name) from the Simulator at 
- * construction
- * Creates GUI for a user to type in name and start, when game starts and it's 
+ * Spawned from the Simulator after "Play Human" option is clicked Gets host,
+ * port, nGambes (and the datafile name) from the Simulator at construction
+ * Creates GUI for a user to type in name and start, when game starts and it's
  * user's turn, they can select parameters to send in their bets for each gamble
  * game continues until the user quits.
+ * 
  * @author ajk377
- *
+ * 
  */
 public class HumanPlayer {
   UserWindow userWindow;
   String name;
   private final int nGambles, port;
   private final String fName, host;
-  
+  private BufferedReader br;
+  private BufferedWriter bw;
+
   public HumanPlayer(String host, int port, int nGambles, String fName)
-  throws Exception {
+      throws Exception {
     this.fName = fName;
     this.nGambles = nGambles;
     this.host = host;
     this.port = port;
-    //set up GUI
-    //make GUI to get user input
-    userWindow= new UserWindow();
-  }
-  /**
-   * Called when userWindow's start button gets pushed (after user registers
-   * his name)
-   * @param host
-   * @param port
-   * @param nGambles
-   * @throws UnknownHostException
-   * @throws IOException
-   */
-  private void connectAndPlay(String name) throws UnknownHostException, IOException {
-    // connect & send name
-    System.out.println("connecting");
-    Socket s = new Socket(host, port);
-    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-        s.getOutputStream()));
-    BufferedReader br = new BufferedReader(new InputStreamReader(
-        s.getInputStream()));
-    bw.write(name + "\n");
-    bw.flush();
-    // wait for OK
-    String in = br.readLine();
-    if (!in.equals("OK")) {
-      System.out.println("got back: " + in);
-      throw new RuntimeException(in);
-    }
-    
-    // play
-    Double[] allocs = new Double[nGambles];
-    Random rnd = new Random();
-    DecimalFormat df = new DecimalFormat("0.00000");
-    //TODO: this should be a while something or whatever
-    for (int i = 0; i < 20; i++) {
-      System.out.println("playing round " + i);
-      allocs = userWindow.getBets(i);
-      String out = convertToString(nGambles, allocs, df);
-      bw.write(out + "\n");
-      bw.flush();
-      // make sure we get back OK
-      in = br.readLine();      
-      if (!in.equals("OK")) {
-        System.out.println("got back: " + in);  
-        throw new RuntimeException(in);
-      }
-      // block till receive outcomes
-      in = br.readLine();
-      System.out.println("got back: " + in);
-    }
-    System.out.println("done");
+    // set up GUI
+    // make GUI to get user input
+    userWindow = new UserWindow();
   }
 
-  public String convertToString(int nGambles, Double[] allocs, DecimalFormat df) {    
+  /**
+   * Called when userWindow's start button gets pushed (after user registers his
+   * name)
+   * 
+   * @param host
+   * @param port
+   */
+  private void play(Double[] allocs) {
+    if (connectionEstablished) {
+      String in;
+      // play=send the results
+      String out = convertToString(nGambles, allocs);
+      try {
+        bw.write(out + "\n");
+        bw.flush();
+        // make sure we get back OK
+        in = br.readLine();
+        if (!in.equals("OK")) {
+          System.out.println("got back: " + in);
+          throw new RuntimeException(in);
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public void connect(String name) {
+    // connect & send name
+    System.out.println("connecting");
+    try {
+      Socket s = new Socket(host, port);
+      bw = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+      br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+      bw.write(name + "\n");
+      bw.flush();
+      String in = br.readLine();
+      if (!in.equals("OK")) {
+        System.out.println("got back: " + in);
+        throw new RuntimeException(in);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    // wait for OK
+
+    connectionEstablished = true;
+  }
+
+  boolean connectionEstablished = false;
+
+  public String convertToString(int nGambles, Double[] allocs) {
+    DecimalFormat df = new DecimalFormat("0.00000");
     StringBuffer sb = new StringBuffer(nGambles * 8);
     for (int j = 0; j < nGambles; j++)
       sb.append(df.format(allocs[j])).append(" ");
@@ -115,18 +117,19 @@ public class HumanPlayer {
           + " <Host> <Port> <Ngambles> <Datafilename>");
       System.exit(1);
     }
-    new HumanPlayer(args[0], Integer.parseInt(args[1]), 
-        Integer.parseInt(args[3]),args[5]);
+    new HumanPlayer(args[0], Integer.parseInt(args[1]),
+        Integer.parseInt(args[3]), args[5]);
   }
-class UserWindow extends JFrame {
+
+  class UserWindow extends JFrame {
 
     Font f1 = new Font("Dialog", Font.BOLD, 12);
     Font f2 = new Font("Dialog", Font.PLAIN, 12);
 
     FontMetrics fm = getFontMetrics(f2);
 
-    JButton bPlay;
-    JPanel pOutcomes, pPlayers;
+    JButton bPlay, bName, bStart;
+    ResultsPanel pInputs;
 
     int idxOrder = -1;
     double[] rets = new double[nGambles];
@@ -134,13 +137,14 @@ class UserWindow extends JFrame {
     Color[] colors = new Color[nGambles];
 
     AffineTransform atVert = AffineTransform.getRotateInstance(-Math.PI / 2);
+    String name;
 
     public UserWindow() {
       super("User Inputs");
+      this.name = "Human Player";
       buildGUI();
       addWindowListener(new WindowAdapter() {
         public void windowClosing(WindowEvent e) {
-          Simulator.this.close();
           System.exit(0);
         }
       });
@@ -151,75 +155,54 @@ class UserWindow extends JFrame {
       return null;
     }
 
-    void addPlayer(Player p) {
-      pPlayers.add(new PlayerPanel(p));
-      pPlayers.validate();
-      // pPlayers.repaint();
-    }
-
-    void animateGame(Game g) {
-      // out( "animateGame( " + g + " )\n" );
-      idxOrder = -1;
-      for (int i = 0; i < nGambles; i++) {
-        rets[i] = 0;
-        drs[i] = 0;
-      }
-      for (int i = 0; i < nGambles; i++) {
-        int idx = g.gambleOrder[i];
-        trace("showing outcome " + g.outcomes[idx] + "\n");
-        rets[idx] = g.outcomes[idx].pyf;
-        drs[idx] = Math.min(rets[idx] - 2, 4);
-        if (drs[idx] < 0)
-          colors[idx] = new Color((float) (-drs[idx] / 2), 0, 0);
-        else
-          colors[idx] = new Color(0, (float) (drs[idx] / 4), 0);
-        idxOrder = i;
-        repaint();
-        try {
-          Thread.sleep(ANIMATE_SLEEP);
-        } catch (InterruptedException e) {
-        }
-      }
-    }
-
     void buildGUI() {
-      JLabel lAttrs = new JLabel("Favorable Attrs: " + attrFav1 + ","
-          + attrFav2 + "  " + "Unfavorable Attrs: " + attrUnfav1 + ","
-          + attrUnfav2);
+      JLabel lAttrs = new JLabel("Name: " + name + " with " + nGambles
+          + " gambles");
       lAttrs.setFont(f1);
-      bPlay = new JButton("Play");
+      bStart = new JButton("Start");
+      bPlay = new JButton("Send");
+      bName = new JButton("Set Name");
       bPlay.setFont(f1);
+      bName.setFont(f1);
+      bStart.setFont(f1);
+      bPlay.setEnabled(false);
+      bStart.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          // get name from the text area or something, set it to
+          // makes panel like selectable(ungray it)
+          bPlay.setEnabled(true);
+          connect(name);
+        }
+
+      });
       bPlay.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          bPlay.setEnabled(false);
-          (new Thread() {
-            public void run() {
-              synchronized (players) {
-                // out( "gui triggered round\n" );
-                Game g = play();
-                animateGame(g);
-                sendFeedback(g);
-                bPlay.setEnabled(true);
-                repaint();
-              }
-            }
-          }).start();
+          // get contents from the panel
+          // if turn..?
+          Double[] bets = pInputs.getBets();
+          play(bets);
         }
       });
       JPanel pTop = new JPanel();
       pTop.add(lAttrs);
       pTop.add(bPlay);
-      pOutcomes = new OutcomesPanel();
+      pInputs = new ResultsPanel();
       Box boxNorth = Box.createVerticalBox();
       boxNorth.add(pTop);
-      boxNorth.add(pOutcomes);
+      boxNorth.add(pInputs);
       boxNorth.add(Box.createVerticalStrut(5));
-      pPlayers = new JPanel();
-      pPlayers.setLayout(new GridLayout(1, 0, 2, 2));
       JPanel pane = (JPanel) getContentPane();
       pane.setLayout(new BorderLayout());
       pane.setBorder(new EmptyBorder(5, 5, 5, 5));
       pane.add(boxNorth, BorderLayout.NORTH);
-      pane.add(pPlayers, BorderLayout.CENTER);
     }
+
+  }
+
+  static class ResultsPanel extends JPanel {
+    public Double[] getBets() {
+      return null;
+    }
+
+  }
 }
