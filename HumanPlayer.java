@@ -1,5 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
@@ -20,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -51,6 +54,9 @@ public class HumanPlayer {
     // set up GUI
     // make GUI to get user input
     userWindow = new UserWindow();
+    userWindow.setSize(400, 500);
+    userWindow.setBackground(Color.WHITE);
+    userWindow.setVisible(true);
   }
 
   /**
@@ -121,17 +127,18 @@ public class HumanPlayer {
       System.exit(1);
     }
     new HumanPlayer(args[0], Integer.parseInt(args[1]),
-        Integer.parseInt(args[3]), args[5]);
+        Integer.parseInt(args[2]), args[3]);
   }
 
   class UserWindow extends JFrame {
-
+    private static final long serialVersionUID = 1L;
     Font f1 = new Font("Dialog", Font.BOLD, 12);
     Font f2 = new Font("Dialog", Font.PLAIN, 12);
 
     FontMetrics fm = getFontMetrics(f2);
 
-    JButton bPlay, bName, bStart;
+    JButton bPlay, bSetName, bStart;
+    JTextField nameField;
     ResultsPanel pInputs;
 
     int idxOrder = -1;
@@ -157,16 +164,29 @@ public class HumanPlayer {
       // TODO Auto-generated method stub
       return null;
     }
-
+    JLabel lname;
     void buildGUI() {
-      JLabel lAttrs = new JLabel("Name: " + name + " with " + nGambles
-          + " gambles");
-      lAttrs.setFont(f1);
+      lname = new JLabel("Name: " + name);
+      JLabel lAttrs =new JLabel("Game with " + nGambles + " gambles");
+      lname.setFont(f1);
+      lAttrs.setFont(f2);
       bStart = new JButton("Start");
       bPlay = new JButton("Send");
-      bName = new JButton("Set Name");
+      bSetName = new JButton("Set Name");
+      nameField = new JTextField("Type your name", 10);      
       bPlay.setFont(f1);
-      bName.setFont(f1);
+      bSetName.setFont(f1);
+      bSetName.addActionListener(new ActionListener(){
+        public void actionPerformed(ActionEvent e){
+          String newName = nameField.getText();
+          System.out.println(nameField.getText());
+          if(!newName.equals("Type your name")){
+            name = newName;
+            lname.setText("Name: " + name);
+            repaint();
+          }
+        }
+      });
       bStart.setFont(f1);
       bPlay.setEnabled(false);
       bStart.addActionListener(new ActionListener() {
@@ -174,12 +194,13 @@ public class HumanPlayer {
           // get name from the text area or something, set it to
           // makes panel like selectable(ungray it)
           bPlay.setEnabled(true);
+          bSetName.setEnabled(false);
           connect(name);
         }
-
       });
       bPlay.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
+          
           // get contents from the panel
           // if turn..?
           Double[] bets = pInputs.getBets();
@@ -187,11 +208,24 @@ public class HumanPlayer {
         }
       });
       JPanel pTop = new JPanel();
+      
+      pTop.add(lname);
       pTop.add(lAttrs);
       pTop.add(bPlay);
       pInputs = new ResultsPanel( nGambles );
+      pTop.add(nameField);
+      pTop.add(bSetName);
+      pTop.setPreferredSize(new Dimension(200, 65));
+      JPanel pMid = new JPanel();
+      pMid.add(bPlay);
+      pMid.add(bStart);
+      
+      pInputs = new ResultsPanel();
+      pInputs.setBackground(Color.lightGray);
       Box boxNorth = Box.createVerticalBox();
       boxNorth.add(pTop);
+      boxNorth.add(Box.createVerticalStrut(5));
+      boxNorth.add(pMid);
       boxNorth.add(pInputs);
       boxNorth.add(Box.createVerticalStrut(5));
       JPanel pane = (JPanel) getContentPane();
@@ -250,4 +284,8 @@ public class HumanPlayer {
 	    return this.bets;
 	}
     }
+=======
+  }
+
+>>>>>>> 6ad5c408605ca670df949a72b43030bb02a5dd0e
 }
