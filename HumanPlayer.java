@@ -261,6 +261,7 @@ public class HumanPlayer {
       this.nGambles = nGambles;
       this.bets = new Double[nGambles];
       this.slids = new MySlider[nGambles];
+      setBets();
     }
 
     public void stateChanged(ChangeEvent e) {
