@@ -264,13 +264,6 @@ public class HumanPlayer {
       setBets();
     }
 
-    public void stateChanged(ChangeEvent e) {
-      MySlider source = (MySlider) e.getSource();
-      if (!source.getValueIsAdjusting()) {
-        this.bets[(int) source.getNum()] = (double) source.getValue();
-      }
-    }
-
     public void setBets() {
       for (int i = 0; i < this.nGambles; i++) {
         // make a slider for each gamble
@@ -287,10 +280,14 @@ public class HumanPlayer {
     }
 
     ChangeListener sliderChanged = new ChangeListener() {
-      public void stateChanged(ChangeEvent ev) {
-        System.out.println(ev.getSource() + "changed!");
-      }
-    };
+	    public void stateChanged(ChangeEvent e) {
+		MySlider source = (MySlider) e.getSource();
+		if (!source.getValueIsAdjusting()) {
+		    bets[(int) source.getNum()] = (double) source.getValue();
+		}
+		System.out.println(e.getSource() + "changed!");
+	    }
+	};
 
     public Double[] getBets() {
       return this.bets;
