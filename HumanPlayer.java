@@ -1,7 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
@@ -164,23 +163,25 @@ public class HumanPlayer {
       // TODO Auto-generated method stub
       return null;
     }
+
     JLabel lname;
+
     void buildGUI() {
       lname = new JLabel("Name: " + name);
-      JLabel lAttrs =new JLabel("Game with " + nGambles + " gambles");
+      JLabel lAttrs = new JLabel("Game with " + nGambles + " gambles");
       lname.setFont(f1);
       lAttrs.setFont(f2);
       bStart = new JButton("Start");
       bPlay = new JButton("Send");
       bSetName = new JButton("Set Name");
-      nameField = new JTextField("Type your name", 10);      
+      nameField = new JTextField("Type your name", 10);
       bPlay.setFont(f1);
       bSetName.setFont(f1);
-      bSetName.addActionListener(new ActionListener(){
-        public void actionPerformed(ActionEvent e){
+      bSetName.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
           String newName = nameField.getText();
           System.out.println(nameField.getText());
-          if(!newName.equals("Type your name")){
+          if (!newName.equals("Type your name")) {
             name = newName;
             lname.setText("Name: " + name);
             repaint();
@@ -200,7 +201,7 @@ public class HumanPlayer {
       });
       bPlay.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          
+
           // get contents from the panel
           // if turn..?
           Double[] bets = pInputs.getBets();
@@ -208,19 +209,19 @@ public class HumanPlayer {
         }
       });
       JPanel pTop = new JPanel();
-      
+
       pTop.add(lname);
       pTop.add(lAttrs);
       pTop.add(bPlay);
-      pInputs = new ResultsPanel( nGambles );
+      pInputs = new ResultsPanel(nGambles);
       pTop.add(nameField);
       pTop.add(bSetName);
       pTop.setPreferredSize(new Dimension(200, 65));
       JPanel pMid = new JPanel();
       pMid.add(bPlay);
       pMid.add(bStart);
-      
-      pInputs = new ResultsPanel();
+
+      pInputs = new ResultsPanel(idxOrder);
       pInputs.setBackground(Color.lightGray);
       Box boxNorth = Box.createVerticalBox();
       boxNorth.add(pTop);
@@ -236,52 +237,60 @@ public class HumanPlayer {
 
   }
 
-    static class MySlider extends JSlider 
-	implements ChangeListener {
-	// num is an index into the bets/slids array
-	int num;
-	public void setNum( int num ) {
-	    this.num = num;
-	}
+  static class MySlider extends JSlider {
+    // num is an index into the bets/slids array
+    int num;
 
-	public int getNum() {
-	    return this.num;
-	}
+    public void setNum(int num) {
+      this.num = num;
     }
 
-    static class ResultsPanel extends JPanel {
-	Double[] bets;
-	JSlider[] slids;
-	int nGambles;
-	public ResultsPanel( int nGambles ) {
-	    this.nGambles = nGambles;
-	    this.bets = new Double[nGambles];
-	    this.slids = new JSlider[nGambles];
-	}
-
-	public void stateChanged( ChangeEvent e ) {
-	    MySlider source = (MySlider)e.getSource();
-	    if (!source.getValueIsAdjusting()) {
-		this.bets[(int)source.getNum()] = (double)source.getValue();
-	    }
-	}
-
-	public void setBets() {
-	    for( int i = 0; i < this.nGambles; i++ ) {
-		// make a slider for each gamble
-		slids[i] = new MySlider(); // horiz with 1-100 def 50
-		slids[i].setNum( i );
-		slids[i].addChangeListener( this );
-		slids[i].setMajorTickSpacing( 10 );
-		slids[i].setMinorTickSpacing( 1 );
-		slids[i].setPaintTicks( true );
-		slids[i].setPaintLabels( false );
-		add(slids[i]);
-	    }
-	}
-
-	public Double[] getBets() {
-	    return this.bets;
-	}
+    public int getNum() {
+      return this.num;
     }
+
+  }
+
+  static class ResultsPanel extends JPanel {
+    Double[] bets;
+    MySlider[] slids;
+    int nGambles;
+
+    public ResultsPanel(int nGambles) {
+      this.nGambles = nGambles;
+      this.bets = new Double[nGambles];
+      this.slids = new MySlider[nGambles];
+    }
+
+    public void stateChanged(ChangeEvent e) {
+      MySlider source = (MySlider) e.getSource();
+      if (!source.getValueIsAdjusting()) {
+        this.bets[(int) source.getNum()] = (double) source.getValue();
+      }
+    }
+
+    public void setBets() {
+      for (int i = 0; i < this.nGambles; i++) {
+        // make a slider for each gamble
+        slids[i] = new MySlider(); // horiz with 1-100 def 50
+        slids[i].setNum(i);
+        slids[i].addChangeListener(sliderChanged);
+        slids[i].setMajorTickSpacing(10);
+        slids[i].setMinorTickSpacing(1);
+        slids[i].setPaintTicks(true);
+        slids[i].setPaintLabels(false);
+        add(slids[i]);
+      }
+    }
+
+    ChangeListener sliderChanged = new ChangeListener() {
+      public void stateChanged(ChangeEvent ev) {
+        System.out.println(ev.getSource() + "changed!");
+      }
+    };
+
+    public Double[] getBets() {
+      return this.bets;
+    }
+  }
 }
