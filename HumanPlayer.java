@@ -285,7 +285,7 @@ public class HumanPlayer {
 		if (!source.getValueIsAdjusting()) {
 		    bets[(int) source.getNum()] = (double) source.getValue();
 		}
-		System.out.println(e.getSource() + "changed!");
+		System.out.println(source.getNum() + "changed!");
 	    }
 	};
 
