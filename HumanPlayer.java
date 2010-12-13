@@ -22,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -44,8 +45,7 @@ public class HumanPlayer {
   private BufferedReader br;
   private BufferedWriter bw;
 
-  public HumanPlayer(String host, int port, int nGambles, String fName)
-      throws Exception {
+  public HumanPlayer(String host, int port, int nGambles, String fName){
     this.fName = fName;
     this.nGambles = nGambles;
     this.host = host;
@@ -213,15 +213,13 @@ public class HumanPlayer {
       pTop.add(lname);
       pTop.add(lAttrs);
       pTop.add(bPlay);
-      pInputs = new ResultsPanel(nGambles);
       pTop.add(nameField);
       pTop.add(bSetName);
       pTop.setPreferredSize(new Dimension(200, 65));
       JPanel pMid = new JPanel();
       pMid.add(bPlay);
       pMid.add(bStart);
-
-      pInputs = new ResultsPanel(idxOrder);
+      pInputs = new ResultsPanel(nGambles);
       pInputs.setBackground(Color.lightGray);
       Box boxNorth = Box.createVerticalBox();
       boxNorth.add(pTop);
@@ -257,6 +255,9 @@ public class HumanPlayer {
     int nGambles;
 
     public ResultsPanel(int nGambles) {
+      super();
+      setPreferredSize(new Dimension(200, 300));
+      setBorder(new BevelBorder(BevelBorder.LOWERED));
       this.nGambles = nGambles;
       this.bets = new Double[nGambles];
       this.slids = new MySlider[nGambles];
@@ -280,6 +281,7 @@ public class HumanPlayer {
         slids[i].setPaintTicks(true);
         slids[i].setPaintLabels(false);
         add(slids[i]);
+        repaint();//?
       }
     }
 
