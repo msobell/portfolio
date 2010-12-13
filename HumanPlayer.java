@@ -19,7 +19,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * Spawned from the Simulator after "Play Human" option is clicked Gets host,
@@ -186,7 +189,7 @@ public class HumanPlayer {
       JPanel pTop = new JPanel();
       pTop.add(lAttrs);
       pTop.add(bPlay);
-      pInputs = new ResultsPanel();
+      pInputs = new ResultsPanel( nGambles );
       Box boxNorth = Box.createVerticalBox();
       boxNorth.add(pTop);
       boxNorth.add(pInputs);
@@ -199,10 +202,52 @@ public class HumanPlayer {
 
   }
 
-  static class ResultsPanel extends JPanel {
-    public Double[] getBets() {
-      return null;
+    static class MySlider extends JSlider 
+	implements ChangeListener {
+	// num is an index into the bets/slids array
+	int num;
+	public void setNum( int num ) {
+	    this.num = num;
+	}
+
+	public int getNum() {
+	    return this.num;
+	}
     }
 
-  }
+    static class ResultsPanel extends JPanel {
+	Double[] bets;
+	JSlider[] slids;
+	int nGambles;
+	public ResultsPanel( int nGambles ) {
+	    this.nGambles = nGambles;
+	    this.bets = new Double[nGambles];
+	    this.slids = new JSlider[nGambles];
+	}
+
+	public void stateChanged( ChangeEvent e ) {
+	    MySlider source = (MySlider)e.getSource();
+	    if (!source.getValueIsAdjusting()) {
+		this.bets[(int)source.getNum()] = (double)source.getValue();
+	    }
+	}
+
+	public void setBets() {
+	    for( int i = 0; i < this.nGambles; i++ ) {
+		// make a slider for each gamble
+		slids[i] = new MySlider(); // horiz with 1-100 def 50
+		slids[i].setNum( i );
+		slids[i].addChangeListener( this );
+		slids[i].setMajorTickSpacing( 10 );
+		slids[i].setMinorTickSpacing( 1 );
+		slids[i].setPaintTicks( true );
+		slids[i].setPaintLabels( false );
+		add(slids[i]);
+	    }
+	}
+
+	public Double[] getBets() {
+	    return this.bets;
+	}
+    }
 }

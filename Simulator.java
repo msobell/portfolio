@@ -691,7 +691,7 @@ public class Simulator implements Server.ClientHandler {
 			    // nGambles from above
 			    // datafile from above
 			    
-			    // newHuman( host, port, nGambles, dataFile );
+			    HumanPlayer h = new HumanPlayer( host, port, nGambles, dataFile );
 			    bHum.setEnabled( true );
 			    repaint();
 			}
