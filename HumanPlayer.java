@@ -284,8 +284,5 @@ public class HumanPlayer {
 	    return this.bets;
 	}
     }
-=======
   }
-
->>>>>>> 6ad5c408605ca670df949a72b43030bb02a5dd0e
 }
