@@ -73,12 +73,6 @@ public class HumanPlayer {
       try {
         bw.write(out + "\n");
         bw.flush();
-        // make sure we get back OK
-        in = br.readLine();
-        if (!in.equals("OK")) {
-          System.out.println("got back: " + in);
-          throw new RuntimeException(in);
-        }
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -195,6 +189,7 @@ public class HumanPlayer {
           // get name from the text area or something, set it to
           // makes panel like selectable(ungray it)
           bPlay.setEnabled(true);
+          bStart.setEnabled(false);
           bSetName.setEnabled(false);
           connect(name);
         }
@@ -215,13 +210,15 @@ public class HumanPlayer {
       pTop.add(bPlay);
       pTop.add(nameField);
       pTop.add(bSetName);
-      pTop.setPreferredSize(new Dimension(200, 65));
+      pTop.setPreferredSize(new Dimension(100, 65));
       JPanel pMid = new JPanel();
       pMid.add(bPlay);
       pMid.add(bStart);
       pInputs = new ResultsPanel(nGambles);
-      pInputs.setBackground(Color.lightGray);
+      pInputs.setBackground(Color.white);
+      //pInputs.setPreferredSize(new Dimension(nGambles*100+10, 65));
       Box boxNorth = Box.createVerticalBox();
+      boxNorth.setPreferredSize(new Dimension(nGambles*100+10, 65));
       boxNorth.add(pTop);
       boxNorth.add(Box.createVerticalStrut(5));
       boxNorth.add(pMid);
@@ -274,6 +271,7 @@ public class HumanPlayer {
         slids[i].setMinorTickSpacing(1);
         slids[i].setPaintTicks(true);
         slids[i].setPaintLabels(false);
+        bets[i] = 50.0;
         add(slids[i]);
         repaint();//?
       }
