@@ -284,7 +284,7 @@ public class HumanPlayer {
 		MySlider source = (MySlider) e.getSource();
 		if (!source.getValueIsAdjusting()) {
 		    bets[(int) source.getNum()] = (double) source.getValue();
-		    System.out.println(source.getNum() + "changed!");
+		    System.out.println(source.getNum() + " changed to " + source.getValue());
 		}
 	    }
 	};
