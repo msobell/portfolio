@@ -44,7 +44,8 @@ public class HumanPlayer {
   private final String fName, host;
   private BufferedReader br;
   private BufferedWriter bw;
-
+  private static final int windowWidth = 400;
+private static final int sliderHeight = 30;
   public HumanPlayer(String host, int port, int nGambles, String fName){
     this.fName = fName;
     this.nGambles = nGambles;
@@ -53,7 +54,7 @@ public class HumanPlayer {
     // set up GUI
     // make GUI to get user input
     userWindow = new UserWindow();
-    userWindow.setSize(400, 500);
+    userWindow.setSize(windowWidth, 65+nGambles*(sliderHeight+15)); //100for the top 
     userWindow.setBackground(Color.WHITE);
     userWindow.setVisible(true);
   }
@@ -152,12 +153,6 @@ public class HumanPlayer {
         }
       });
     }
-
-    public Double[] getBets(int i) {
-      // TODO Auto-generated method stub
-      return null;
-    }
-
     JLabel lname;
 
     void buildGUI() {
@@ -216,9 +211,9 @@ public class HumanPlayer {
       pMid.add(bStart);
       pInputs = new ResultsPanel(nGambles);
       pInputs.setBackground(Color.white);
-      //pInputs.setPreferredSize(new Dimension(nGambles*100+10, 65));
+      pInputs.setPreferredSize(new Dimension(100, nGambles*100));
       Box boxNorth = Box.createVerticalBox();
-      boxNorth.setPreferredSize(new Dimension(nGambles*100+10, 65));
+      //boxNorth.setPreferredSize(new Dimension(nGambles*100+10, 65));
       boxNorth.add(pTop);
       boxNorth.add(Box.createVerticalStrut(5));
       boxNorth.add(pMid);
@@ -235,7 +230,7 @@ public class HumanPlayer {
   static class MySlider extends JSlider {
     // num is an index into the bets/slids array
     int num;
-
+    
     public void setNum(int num) {
       this.num = num;
     }
@@ -247,7 +242,9 @@ public class HumanPlayer {
   }
 
   static class ResultsPanel extends JPanel {
-    Double[] bets;
+
+	private static final long serialVersionUID = 1L;
+	Double[] bets;
     MySlider[] slids;
     int nGambles;
 
@@ -271,6 +268,7 @@ public class HumanPlayer {
         slids[i].setMinorTickSpacing(1);
         slids[i].setPaintTicks(true);
         slids[i].setPaintLabels(false);
+        slids[i].setPreferredSize(new Dimension(windowWidth-25, sliderHeight));
         bets[i] = 50.0;
         add(slids[i]);
         repaint();//?
