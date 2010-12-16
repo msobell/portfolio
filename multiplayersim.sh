@@ -1,6 +1,6 @@
 #! /bin/bash
 echo "Generating data.txt..."
-java -cp . DataGen 200 data.txt
+java -cp . DataGen 20 data.txt
 sleep 1
 echo "Spawning server..."
 gnome-terminal --geometry=100x30 --title="SERVER" -x java -cp . Simulator data.txt 10000 true true
