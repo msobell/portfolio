@@ -68,8 +68,8 @@ private static final int sliderHeight = 30;
    */
   private void play(Double[] allocs) {
     if (connectionEstablished) {
-      String in;
-      // play=send the results
+   	//String in;
+    // play=send the results
       String out = convertToString(nGambles, allocs);
       try {
         bw.write(out + "\n");
@@ -144,7 +144,7 @@ private static final int sliderHeight = 30;
     String name;
 
     public UserWindow() {
-      super("User Inputs");
+      super("Human Player");
       this.name = "Human Player";
       buildGUI();
       addWindowListener(new WindowAdapter() {
@@ -191,9 +191,8 @@ private static final int sliderHeight = 30;
       });
       bPlay.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-
-          // get contents from the panel
-          // if turn..?
+        	// get contents from the panel
+        	// if turn..?
           Double[] bets = pInputs.getBets();
           play(bets);
         }
@@ -230,9 +229,23 @@ private static final int sliderHeight = 30;
   static class MySlider extends JSlider {
     // num is an index into the bets/slids array
     int num;
+    static Font f2 = new Font("Dialog", Font.PLAIN, 12);
+
+    public MySlider() {
+    	super();
+    	this.setMajorTickSpacing(10);
+    	this.setMinorTickSpacing(1);
+    	this.setFont(f2);
+    	this.setPaintTicks(true);
+    	this.setPaintLabels(true);
+    	repaint();
+    }
     
     public void setNum(int num) {
       this.num = num;
+      JLabel sNum = new JLabel(num + " ");	
+      sNum.setFont(f2);
+      add(sNum);
     }
 
     public int getNum() {
@@ -259,7 +272,7 @@ private static final int sliderHeight = 30;
     }
 
     public void setBets() {
-      for (int i = 0; i < this.nGambles; i++) {
+      for (int i = this.nGambles - 1; i > 0; i--) {
         // make a slider for each gamble
         slids[i] = new MySlider(); // horiz with 1-100 def 50
         slids[i].setNum(i);
@@ -270,7 +283,8 @@ private static final int sliderHeight = 30;
         slids[i].setPaintLabels(false);
         slids[i].setPreferredSize(new Dimension(windowWidth-25, sliderHeight));
         bets[i] = 50.0;
-        add(slids[i]);
+                add(slids[i]);
+        
         repaint();//?
       }
     }
