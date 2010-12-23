@@ -41,20 +41,19 @@ public class HumanPlayer {
   UserWindow userWindow;
   String name;
   private final int nGambles, port;
-  private final String fName, host;
+  private final String host;
   private BufferedReader br;
   private BufferedWriter bw;
   private static final int windowWidth = 400;
-private static final int sliderHeight = 30;
+  private static final int sliderHeight = 30;
   public HumanPlayer(String host, int port, int nGambles, String fName){
-    this.fName = fName;
     this.nGambles = nGambles;
     this.host = host;
     this.port = port;
     // set up GUI
     // make GUI to get user input
     userWindow = new UserWindow();
-    userWindow.setSize(windowWidth, 65+nGambles*(sliderHeight+15)); //100for the top 
+    userWindow.setSize(windowWidth, 65+nGambles*(sliderHeight+35)); //100 for the top 
     userWindow.setBackground(Color.WHITE);
     userWindow.setVisible(true);
   }
@@ -243,9 +242,6 @@ private static final int sliderHeight = 30;
     
     public void setNum(int num) {
       this.num = num;
-      JLabel sNum = new JLabel(num + " ");	
-      sNum.setFont(f2);
-      add(sNum);
     }
 
     public int getNum() {
@@ -272,7 +268,7 @@ private static final int sliderHeight = 30;
     }
 
     public void setBets() {
-      for (int i = this.nGambles - 1; i > 0; i--) {
+      for (int i = this.nGambles - 1; i >= 0; i--) {
         // make a slider for each gamble
         slids[i] = new MySlider(); // horiz with 1-100 def 50
         slids[i].setNum(i);
@@ -283,8 +279,10 @@ private static final int sliderHeight = 30;
         slids[i].setPaintLabels(false);
         slids[i].setPreferredSize(new Dimension(windowWidth-25, sliderHeight));
         bets[i] = 50.0;
-                add(slids[i]);
-        
+        JLabel sNum = new JLabel(i + " ", JLabel.CENTER);	
+        sNum.setFont(new Font("Dialog", Font.PLAIN, 12));
+        add(sNum);
+        add(slids[i]);
         repaint();//?
       }
     }
