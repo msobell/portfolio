@@ -754,9 +754,10 @@ public class Simulator implements Server.ClientHandler {
           // if bar height rounded to zero, make it 1 pxl
           if (rh == 0)
             rh = 1;
+          // draw the number starting 2/5ths of the way in 5 pixels above the bar
           g.setColor(colors[i]);
           g.fillRect(x0 + wGamble * i, ry, wGamble, rh);
-          g.drawString("hello!", rh, ry);
+          g.drawString(i + "", x0 + wGamble*2/5 + 1 + wGamble * i, ry - 5);
         }
       }
     }
