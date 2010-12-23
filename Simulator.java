@@ -628,6 +628,7 @@ public class Simulator implements Server.ClientHandler {
         else
           colors[idx] = new Color(0, (float) (drs[idx] / 4), 0);
         idxOrder = i;
+        // TODO -- add labels to each result (feeds to PaintComponents)
         repaint();
         try {
           Thread.sleep(ANIMATE_SLEEP);
@@ -738,6 +739,7 @@ public class Simulator implements Server.ClientHandler {
         g.drawLine(x0 - pad, y0, xng + pad, y0);
         g.drawLine(x0 - pad, y2, xng + pad, y2);
         for (int i = 0; i < nGambles; i++) {
+        	// TODO - use g.drawString(string, x, y)
           if (drs[i] == 0)
             continue;
           int rh;
@@ -754,6 +756,7 @@ public class Simulator implements Server.ClientHandler {
             rh = 1;
           g.setColor(colors[i]);
           g.fillRect(x0 + wGamble * i, ry, wGamble, rh);
+          g.drawString("hello!", rh, ry);
         }
       }
     }
