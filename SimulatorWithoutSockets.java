@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
@@ -8,7 +9,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-public class SimulatorWithoutSockets  {
+public class SimulatorWithoutSockets{
 
   static final boolean TRACE = false;
   static final boolean DEBUG = false;
@@ -53,8 +54,9 @@ public class SimulatorWithoutSockets  {
   private final String dataFile;
   private ArrayList<HumanPlayerWithoutSockets> humanPlayers = 
     new ArrayList<HumanPlayerWithoutSockets>();
-
-  SimulatorWithoutSockets(String dataFile) {
+  private JApplet applet;
+  SimulatorWithoutSockets(String dataFile, JApplet applet) {
+    this.applet = applet;
     this.dataFile = dataFile;
     readData(this.dataFile);
     assignHiddenAttrs();
@@ -62,6 +64,12 @@ public class SimulatorWithoutSockets  {
       this.viz = new Viz();
       this.viz.setSize(800, 600);
       this.viz.setVisible(true);
+  }
+  public Component getGUI(){
+    return viz;
+  }
+  public Component getHumanGUI(){
+    return viz.h.getGUI();
   }
 
   public void newClient(HumanPlayerWithoutSockets c) {
@@ -557,14 +565,14 @@ public class SimulatorWithoutSockets  {
     AffineTransform atVert = AffineTransform.getRotateInstance(-Math.PI / 2);
 
     Viz() {
-      super("Portfolio Simulator");
+      //super("Portfolio Simulator");
       buildGUI();
       addHumanGUI();
-      addWindowListener(new WindowAdapter() {
+/*      addWindowListener(new WindowAdapter() {
         public void windowClosing(WindowEvent e) {
           System.exit(0);
         }
-      });
+      });*/
     }
 
     void addPlayer(Player p) {
@@ -617,7 +625,7 @@ public class SimulatorWithoutSockets  {
             public void run() {
               synchronized (players) {
                 // out( "gui triggered round\n" );
-                Game g = play();
+                Game g = SimulatorWithoutSockets.this.play();
                 animateGame(g);
                 sendFeedback(g);
                 bPlay.setEnabled(true);
@@ -638,7 +646,7 @@ public class SimulatorWithoutSockets  {
               // nGambles from above
               // datafile from above
               HumanPlayerWithoutSockets h = new HumanPlayerWithoutSockets(nGambles, dataFile,
-                  SimulatorWithoutSockets.this);
+                  SimulatorWithoutSockets.this, applet);
               //AJ added 12/12 just in case we want to refer to them. 
               //like kill them.
               humanPlayers.add(h);
@@ -661,16 +669,18 @@ public class SimulatorWithoutSockets  {
       boxNorth.add(Box.createVerticalStrut(5));
       pPlayers = new JPanel();
       pPlayers.setLayout(new GridLayout(1, 0, 2, 2));
-      JPanel pane = (JPanel) getContentPane();
+      JPanel pane = (JPanel) applet.getContentPane();
       pane.setLayout(new BorderLayout());
       pane.setBorder(new EmptyBorder(5, 5, 5, 5));
       pane.add(boxNorth, BorderLayout.NORTH);
       pane.add(pPlayers, BorderLayout.CENTER);
+      
     }
+    private HumanPlayerWithoutSockets h; 
     public void addHumanGUI(){
       System.out.println("gui triggered human\n");
-      HumanPlayerWithoutSockets h = new HumanPlayerWithoutSockets(nGambles, dataFile,
-          SimulatorWithoutSockets.this);
+      h = new HumanPlayerWithoutSockets(nGambles, dataFile,
+          SimulatorWithoutSockets.this, applet);
       //AJ added 12/12 just in case we want to refer to them. 
       humanPlayers.add(h);
       bHum.setEnabled(true);
@@ -894,6 +904,6 @@ public class SimulatorWithoutSockets  {
           + "      dataFile  gambles,links,attrs\n");
       System.exit(1);
     }
-    new SimulatorWithoutSockets(dataFile);
+    new SimulatorWithoutSockets(dataFile, new JApplet());
   }
 }

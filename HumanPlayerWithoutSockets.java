@@ -1,18 +1,18 @@
+import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
 import java.text.DecimalFormat;
 
 import javax.swing.Box;
+import javax.swing.JApplet;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -39,9 +39,12 @@ public class HumanPlayerWithoutSockets {
   private static final int windowWidth = 400;
   private static final int sliderHeight = 30;
   private SimulatorWithoutSockets sim;
-  public HumanPlayerWithoutSockets(int nGambles, String fName, SimulatorWithoutSockets sim){
+  private JApplet app;
+  public HumanPlayerWithoutSockets(int nGambles, String fName, SimulatorWithoutSockets sim,
+      JApplet app){
     this.nGambles = nGambles;
     this.sim = sim;
+    this.app = app;
     // set up GUI
     // make GUI to get user input
     userWindow = new UserWindow();
@@ -49,6 +52,9 @@ public class HumanPlayerWithoutSockets {
     userWindow.setBackground(Color.WHITE);
     userWindow.setLocation(850, 0);
     userWindow.setVisible(true);
+  }
+  public Component getGUI(){
+    return userWindow;
   }
 
   /**
@@ -89,16 +95,16 @@ public class HumanPlayerWithoutSockets {
   }
 
   public static void main(String[] args) throws Exception {
-    if (args.length != 4) {
+    if (args.length != 2) {
       System.out.println("usage:  Java HumanPlayerWithoutSocket"
           + "<Ngambles> <Datafilename>");
       System.exit(1);
     }
-    new HumanPlayerWithoutSockets(Integer.parseInt(args[2]), args[3], 
-        new SimulatorWithoutSockets(args[3]));
+    new HumanPlayerWithoutSockets(Integer.parseInt(args[0]), args[1], 
+        new SimulatorWithoutSockets(args[1], new JApplet()), new JApplet());
   }
 
-  class UserWindow extends JFrame {
+  class UserWindow extends JPanel {
     private static final long serialVersionUID = 1L;
     Font f1 = new Font("Dialog", Font.BOLD, 12);
     Font f2 = new Font("Dialog", Font.PLAIN, 12);
@@ -118,14 +124,14 @@ public class HumanPlayerWithoutSockets {
     String name;
 
     public UserWindow() {
-      super("Human Player");
+      //super("Human Player");
       this.name = "Human Player";
       buildGUI();
-      addWindowListener(new WindowAdapter() {
+      /*addWindowListener(new WindowAdapter() {
         public void windowClosing(WindowEvent e) {
           System.exit(0);
         }
-      });
+      });*/
     }
     JLabel lname;
 
@@ -192,10 +198,11 @@ public class HumanPlayerWithoutSockets {
       boxNorth.add(pMid);
       boxNorth.add(pInputs);
       boxNorth.add(Box.createVerticalStrut(5));
-      JPanel pane = (JPanel) getContentPane();
+     JPanel pane = (JPanel) new JPanel();
       pane.setLayout(new BorderLayout());
       pane.setBorder(new EmptyBorder(5, 5, 5, 5));
       pane.add(boxNorth, BorderLayout.NORTH);
+      app.getContentPane().add(pane, BorderLayout.LINE_END);
     }
 
   }
