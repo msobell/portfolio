@@ -1,8 +1,8 @@
-import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
@@ -11,6 +11,7 @@ import java.awt.geom.AffineTransform;
 import java.text.DecimalFormat;
 
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -178,14 +179,18 @@ public class HumanPlayerWithoutSockets {
         }
       });
       JPanel pTop = new JPanel();
-
-      pTop.add(lname);
+      pTop.setLayout(new BoxLayout(pTop, BoxLayout.Y_AXIS));
+      lAttrs.setAlignmentX(Component.CENTER_ALIGNMENT);
       pTop.add(lAttrs);
-      pTop.add(bPlay);
+      lname.setAlignmentX(Component.CENTER_ALIGNMENT);
+      pTop.add(lname);
+      nameField.setAlignmentX(Component.CENTER_ALIGNMENT);
       pTop.add(nameField);
+      bSetName.setAlignmentX(CENTER_ALIGNMENT);
       pTop.add(bSetName);
-      pTop.setPreferredSize(new Dimension(100, 65));
+      pTop.setPreferredSize(new Dimension(100, 100));
       JPanel pMid = new JPanel();
+      pMid.setLayout(new FlowLayout());
       pMid.add(bPlay);
       pMid.add(bStart);
       pInputs = new ResultsPanel(nGambles);
@@ -196,13 +201,15 @@ public class HumanPlayerWithoutSockets {
       boxNorth.add(pTop);
       boxNorth.add(Box.createVerticalStrut(5));
       boxNorth.add(pMid);
+      boxNorth.add(Box.createVerticalStrut(5));
       boxNorth.add(pInputs);
       boxNorth.add(Box.createVerticalStrut(5));
      JPanel pane = (JPanel) new JPanel();
       pane.setLayout(new BorderLayout());
       pane.setBorder(new EmptyBorder(5, 5, 5, 5));
       pane.add(boxNorth, BorderLayout.NORTH);
-      app.getContentPane().add(pane, BorderLayout.LINE_END);
+      pane.setMaximumSize(new Dimension(100, (nGambles*100)+15));
+      app.getContentPane().add(pane);
     }
 
   }

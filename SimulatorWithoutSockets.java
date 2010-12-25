@@ -547,7 +547,7 @@ public class SimulatorWithoutSockets{
 
   }
 
-  class Viz extends JFrame {
+  class Viz extends JPanel {
 
     Font f1 = new Font("Dialog", Font.BOLD, 12);
     Font f2 = new Font("Dialog", Font.PLAIN, 12);
@@ -600,6 +600,7 @@ public class SimulatorWithoutSockets{
         idxOrder = i;
         // TODO -- add labels to each result (feeds to PaintComponents)
         repaint();
+        applet.repaint();
         try {
           Thread.sleep(ANIMATE_SLEEP);
         } catch (InterruptedException e) {
@@ -669,11 +670,13 @@ public class SimulatorWithoutSockets{
       boxNorth.add(Box.createVerticalStrut(5));
       pPlayers = new JPanel();
       pPlayers.setLayout(new GridLayout(1, 0, 2, 2));
-      JPanel pane = (JPanel) applet.getContentPane();
+      JPanel pane = new JPanel();
       pane.setLayout(new BorderLayout());
       pane.setBorder(new EmptyBorder(5, 5, 5, 5));
       pane.add(boxNorth, BorderLayout.NORTH);
       pane.add(pPlayers, BorderLayout.CENTER);
+      pane.setPreferredSize(new Dimension(600, 800));
+      applet.getContentPane().add(pane);
       
     }
     private HumanPlayerWithoutSockets h; 
