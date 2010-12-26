@@ -676,6 +676,7 @@ public class SimulatorWithoutSockets{
       pane.add(boxNorth, BorderLayout.NORTH);
       pane.add(pPlayers, BorderLayout.CENTER);
       pane.setPreferredSize(new Dimension(600, 800));
+     
       applet.getContentPane().add(pane);
       
     }

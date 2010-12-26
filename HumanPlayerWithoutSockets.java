@@ -14,6 +14,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JApplet;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -195,7 +196,7 @@ public class HumanPlayerWithoutSockets {
       pMid.add(bStart);
       pInputs = new ResultsPanel(nGambles);
       pInputs.setBackground(Color.white);
-      pInputs.setPreferredSize(new Dimension(100, nGambles*100));
+      pInputs.setPreferredSize(new Dimension(380, nGambles*60));
       Box boxNorth = Box.createVerticalBox();
       //boxNorth.setPreferredSize(new Dimension(nGambles*100+10, 65));
       boxNorth.add(pTop);
@@ -203,12 +204,12 @@ public class HumanPlayerWithoutSockets {
       boxNorth.add(pMid);
       boxNorth.add(Box.createVerticalStrut(5));
       boxNorth.add(pInputs);
-      boxNorth.add(Box.createVerticalStrut(5));
-     JPanel pane = (JPanel) new JPanel();
+      
+     JPanel pane = new JPanel();
       pane.setLayout(new BorderLayout());
       pane.setBorder(new EmptyBorder(5, 5, 5, 5));
       pane.add(boxNorth, BorderLayout.NORTH);
-      pane.setMaximumSize(new Dimension(100, (nGambles*100)+15));
+      
       app.getContentPane().add(pane);
     }
 
@@ -248,7 +249,7 @@ public class HumanPlayerWithoutSockets {
 
     public ResultsPanel(int nGambles) {
       super();
-      setPreferredSize(new Dimension(200, 300));
+      //setPreferredSize(new Dimension(200, 100));
       setBorder(new BevelBorder(BevelBorder.LOWERED));
       this.nGambles = nGambles;
       this.bets = new Double[nGambles];

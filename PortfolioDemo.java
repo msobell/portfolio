@@ -15,9 +15,9 @@ public class PortfolioDemo extends JApplet {
   private static final long serialVersionUID = 1L;
   private SimulatorWithoutSockets sim;
   public void init(){
-    this.setBackground(Color.white);
-    this.setPreferredSize(new Dimension(800, 800));
-    this.setLayout(new FlowLayout());
+    
+    this.setSize(new Dimension(1000, 800));
+    this.getContentPane().setLayout(new FlowLayout(FlowLayout.LEADING, 3, 3));
     sim = new SimulatorWithoutSockets("data.txt", this);
     //this.add(sim.getGUI());
     //this.add(sim.getHumanGUI());
