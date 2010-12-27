@@ -35,7 +35,7 @@ public class SimulatorWithoutSockets{
 
   static final int MAX_CHANGE = 10;
 
-  int nGambles;
+  static int nGambles;
   int roundCount = 0;
   Gamble[] gambles;
   int attrFav1, attrFav2, attrUnfav1, attrUnfav2;
@@ -51,14 +51,14 @@ public class SimulatorWithoutSockets{
   double maxCumWealth = 1;
   int changeCount = 0;
   // AJ added 12/12
-  private final String dataFile;
+  //removed cause web can't read file private final String dataFile;
   private ArrayList<HumanPlayerWithoutSockets> humanPlayers = 
     new ArrayList<HumanPlayerWithoutSockets>();
   private JApplet applet;
-  SimulatorWithoutSockets(String dataFile, JApplet applet) {
+  SimulatorWithoutSockets(JApplet applet) {
     this.applet = applet;
-    this.dataFile = dataFile;
-    readData(this.dataFile);
+    
+    readData();
     assignHiddenAttrs();
       out("viz mode\n");
       this.viz = new Viz();
@@ -361,10 +361,38 @@ public class SimulatorWithoutSockets{
         + "," + attrUnfav2 + "\n");
   }
 
-  void readData(String s) {
+  void readData() {
+    String s = "#gamble(gambleid, high return, high prob, medium return, med prob, low return, low prob)\n" +
+    		"000, 09.340, 0.066, 02.393, 0.455, 00.610, 0.478\n" +
+    		"001, 05.66, 0.225, 01.500, 0.421, 00.140, 0.354\n" +
+    		"002, 06.835, 0.128, 01.772, 0.489, 00.680, 0.383\n" +
+    		"003, 06.539, 0.191, 01.458, 0.483, 00.137, 0.325\n" +
+    		"004, 04.954, 0.234, 01.605, 0.510, 00.091, 0.256\n" +
+    		"005, 04.748, 0.162, 02.304, 0.475, 00.374, 0.363\n" +
+    		"006, 03.251, 0.329, 01.762, 0.421, 00.755, 0.250\n" +
+    		"007, 04.480, 0.235, 01.900, 0.425, 00.414, 0.340\n" +
+    		"008, 03.622, 0.386, 01.211, 0.421, 00.480, 0.193\n" +
+    		"009, 04.009, 0.302, 01.459, 0.514, 00.221, 0.184\n" +
+    		"#gambleatts(gambleid, gambleclass)\n" +
+    		"000, 15\n" +
+    		"001, 7\n" +
+    		"002, 8\n" +
+    		"003, 4\n" +
+    		"004, 9\n" +
+    		"005, 5\n" +
+    		"006, 11\n" +
+    		"007, 3\n" +
+    		"008, 14\n" +
+    		"009, 2\n" +
+    		"#link(gambleid, gambleid)\n" +
+    		"003, 002\n" +
+    		"003, 008\n" +
+    		"002, 008\n" +
+    		"006, 001\n";
+      
     debug("readData( " + s + " )\n");
     try {
-      BufferedReader br = new BufferedReader(new FileReader(s));
+      BufferedReader br = new BufferedReader(new StringReader(s));
       ArrayList[] als = new ArrayList[3];
       for (int i = 0; i < 3; i++)
         als[i] = new ArrayList();
@@ -399,6 +427,7 @@ public class SimulatorWithoutSockets{
         throw new RuntimeException("# gambles != # attrs");
       // build gambles
       nGambles = als[0].size();
+      System.out.println(nGambles);
       gambles = new Gamble[nGambles];
       for (int i = 0; i < nGambles; i++) {
         double[] ddg = (double[]) als[0].get(i);
@@ -646,7 +675,7 @@ public class SimulatorWithoutSockets{
               out("gui triggered human\n");
               // nGambles from above
               // datafile from above
-              HumanPlayerWithoutSockets h = new HumanPlayerWithoutSockets(nGambles, dataFile,
+              HumanPlayerWithoutSockets h = new HumanPlayerWithoutSockets(nGambles,
                   SimulatorWithoutSockets.this, applet);
               //AJ added 12/12 just in case we want to refer to them. 
               //like kill them.
@@ -683,7 +712,7 @@ public class SimulatorWithoutSockets{
     private HumanPlayerWithoutSockets h; 
     public void addHumanGUI(){
       System.out.println("gui triggered human\n");
-      h = new HumanPlayerWithoutSockets(nGambles, dataFile,
+      h = new HumanPlayerWithoutSockets(nGambles,
           SimulatorWithoutSockets.this, applet);
       //AJ added 12/12 just in case we want to refer to them. 
       humanPlayers.add(h);
@@ -896,18 +925,6 @@ public class SimulatorWithoutSockets{
   }
 
   public static void main(String[] args) {
-    String dataFile = null;
-    boolean viz = true;
-    int nRuns = 10;
-    try {
-      dataFile = args[0];
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.out.println("  usage:\n"
-          + "    java Simulator <dataFile>\n"
-          + "      dataFile  gambles,links,attrs\n");
-      System.exit(1);
-    }
-    new SimulatorWithoutSockets(dataFile, new JApplet());
+    new SimulatorWithoutSockets( new JApplet());
   }
 }

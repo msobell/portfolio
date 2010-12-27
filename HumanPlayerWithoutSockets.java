@@ -42,9 +42,10 @@ public class HumanPlayerWithoutSockets {
   private static final int sliderHeight = 30;
   private SimulatorWithoutSockets sim;
   private JApplet app;
-  public HumanPlayerWithoutSockets(int nGambles, String fName, SimulatorWithoutSockets sim,
+  public HumanPlayerWithoutSockets(int nGambles, SimulatorWithoutSockets sim,
       JApplet app){
     this.nGambles = nGambles;
+    System.out.println(nGambles);
     this.sim = sim;
     this.app = app;
     // set up GUI
@@ -97,13 +98,13 @@ public class HumanPlayerWithoutSockets {
   }
 
   public static void main(String[] args) throws Exception {
-    if (args.length != 2) {
+    if (args.length != 1) {
       System.out.println("usage:  Java HumanPlayerWithoutSocket"
-          + "<Ngambles> <Datafilename>");
+          + "<Ngambles>");
       System.exit(1);
     }
-    new HumanPlayerWithoutSockets(Integer.parseInt(args[0]), args[1], 
-        new SimulatorWithoutSockets(args[1], new JApplet()), new JApplet());
+    new HumanPlayerWithoutSockets(Integer.parseInt(args[0]), 
+        new SimulatorWithoutSockets(new JApplet()), new JApplet());
   }
 
   class UserWindow extends JPanel {

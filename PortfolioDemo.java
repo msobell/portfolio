@@ -18,7 +18,7 @@ public class PortfolioDemo extends JApplet {
     
     this.setSize(new Dimension(1000, 800));
     this.getContentPane().setLayout(new FlowLayout(FlowLayout.LEADING, 3, 3));
-    sim = new SimulatorWithoutSockets("data.txt", this);
+    sim = new SimulatorWithoutSockets(this);
     //this.add(sim.getGUI());
     //this.add(sim.getHumanGUI());
   }
