@@ -47,6 +47,7 @@ public class HumanPlayerWithoutSockets {
     this.nGambles = nGambles;
     System.out.println(nGambles);
     this.sim = sim;
+    this.name="Human Player";
     this.app = app;
     // set up GUI
     // make GUI to get user input
@@ -75,6 +76,11 @@ public class HumanPlayerWithoutSockets {
       //TODO: send it to simulator
     }
   }
+  private void sendName(){
+	  if(connectionEstablished){
+		  sim.newInputFromClient(this, name);
+	  }
+  }
 
   public void connect(String name) {
     // connect & send name
@@ -88,7 +94,7 @@ public class HumanPlayerWithoutSockets {
   boolean connectionEstablished = false;
 
   public String convertToString(int nGambles, Double[] allocs) {
-    DecimalFormat df = new DecimalFormat("0.00000");
+    DecimalFormat df = new DecimalFormat("0.000");
     StringBuffer sb = new StringBuffer(nGambles * 8);
     for (int j = 0; j < nGambles; j++)
       sb.append(df.format(allocs[j])).append(" ");
@@ -155,7 +161,7 @@ public class HumanPlayerWithoutSockets {
           System.out.println(nameField.getText());
           if (!newName.equals("Type your name")) {
             name = newName;
-            lname.setText("Name: " + name);
+            lname.setText("Name: " + name);            
             repaint();
           }
         }
@@ -170,6 +176,7 @@ public class HumanPlayerWithoutSockets {
           bStart.setEnabled(false);
           bSetName.setEnabled(false);
           connect(name);
+          sendName();
         }
       });
       bPlay.addActionListener(new ActionListener() {

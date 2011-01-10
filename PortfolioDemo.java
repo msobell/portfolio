@@ -1,5 +1,4 @@
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 
@@ -16,11 +15,9 @@ public class PortfolioDemo extends JApplet {
   private SimulatorWithoutSockets sim;
   public void init(){
     
-    this.setSize(new Dimension(1000, 800));
+    this.setSize(new Dimension(900, 800));
     this.getContentPane().setLayout(new FlowLayout(FlowLayout.LEADING, 3, 3));
     sim = new SimulatorWithoutSockets(this);
-    //this.add(sim.getGUI());
-    //this.add(sim.getHumanGUI());
   }
 
 }

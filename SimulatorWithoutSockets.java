@@ -51,7 +51,8 @@ public class SimulatorWithoutSockets{
   double maxCumWealth = 1;
   int changeCount = 0;
   // AJ added 12/12
-  //removed cause web can't read file private final String dataFile;
+  //removed cause web can't read file 
+  //private final String dataFile;
   private ArrayList<HumanPlayerWithoutSockets> humanPlayers = 
     new ArrayList<HumanPlayerWithoutSockets>();
   private JApplet applet;
@@ -62,7 +63,7 @@ public class SimulatorWithoutSockets{
     assignHiddenAttrs();
       out("viz mode\n");
       this.viz = new Viz();
-      this.viz.setSize(800, 600);
+      this.viz.setSize(800, 500);
       this.viz.setVisible(true);
   }
   public Component getGUI(){
@@ -83,6 +84,7 @@ public class SimulatorWithoutSockets{
       if (viz != null) {
         viz.addPlayer(p);
         viz.repaint();
+        applet.repaint();
       }
     }
   }
@@ -131,6 +133,7 @@ public class SimulatorWithoutSockets{
       }
       if (viz != null)
         viz.repaint();
+      applet.repaint();
     }
   }
 
@@ -142,6 +145,7 @@ public class SimulatorWithoutSockets{
       p.lastTurn = null;
       if (viz != null)
         viz.repaint();
+      applet.repaint();
     }
   }
 
@@ -660,6 +664,7 @@ public class SimulatorWithoutSockets{
                 sendFeedback(g);
                 bPlay.setEnabled(true);
                 repaint();
+                applet.repaint();
               }
             }
           }).start();
@@ -682,6 +687,7 @@ public class SimulatorWithoutSockets{
               humanPlayers.add(h);
               bHum.setEnabled(true);
               repaint();
+              applet.repaint();
             }
           }).start();
         }
@@ -704,7 +710,7 @@ public class SimulatorWithoutSockets{
       pane.setBorder(new EmptyBorder(5, 5, 5, 5));
       pane.add(boxNorth, BorderLayout.NORTH);
       pane.add(pPlayers, BorderLayout.CENTER);
-      pane.setPreferredSize(new Dimension(600, 800));
+      pane.setPreferredSize(new Dimension(500, 700));
      
       applet.getContentPane().add(pane);
       
@@ -718,6 +724,7 @@ public class SimulatorWithoutSockets{
       humanPlayers.add(h);
       bHum.setEnabled(true);
       repaint();
+      applet.repaint();
     }
 
     class OutcomesPanel extends JPanel {
@@ -848,6 +855,7 @@ public class SimulatorWithoutSockets{
           double inc = (idxOrder == -1) ? 0
               : t.cumIncomeInGambleOrder[idxOrder];
           String incStr = DF_DLRS.format(inc);
+          System.out.print(incStr);
           int incStrLen = (int) Math.ceil(fm.stringWidth(incStr));
           g2d.setColor(Color.BLACK);
           g2d.setFont(f2);
