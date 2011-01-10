@@ -160,8 +160,8 @@ public class HumanPlayerWithoutSockets {
           String newName = nameField.getText();
           System.out.println(nameField.getText());
           if (!newName.equals("Type your name")) {
-            name = newName;
-            lname.setText("Name: " + name);            
+            HumanPlayerWithoutSockets.this.name = newName;
+            lname.setText("Name: " + newName);            
             repaint();
           }
         }
