@@ -3,6 +3,19 @@ Dennis Shasha
 Omniheurist Course
 Computer Science
  
+How to use the human player:
+
+1. Type your name where it says "type your name"
+2. Press "Set Name"
+3. Press "Start"
+4. Adjust the sliders
+5. Press "Send"
+
+The server now has your gambles and you must hit "Play" (or wait for the architect to hit play). You can see how you did by the numbers above the gambles which correspond to the sliders. IMPORTANT: The sliders are normalized.
+
+6. Repeat steps 4 and 5.
+7. Good luck!
+
 Description
 
 You are given a bunch of "investment vehicles" which we will unceremoniously call gambling instruments, or gambles for short. Before discussing an exact formulation of the problem, let's suppose just for the moment that you have a bunch of possible gambles and each of them pays two to one with 0.7 odds. Should you put all your money in one or spread it out assuming your goal is to maximize expected return and minimize the variance. Obviously spread them out. Expected value doesn't change but variance goes way down. A minimum variance solution that gives a certain expected value is called an efficient frontier .
